@@ -27,7 +27,7 @@ def save_settings(settings):
 settings = load_settings()
 os.makedirs("plugin", exist_ok=True)
 
-app = Client("my_user_bot", api_id=Значение, api_hash="значение")
+app = Client("cub_bot", api_id=21004939, api_hash="05b2b4afbae9aecfd3dfd34893afff6f")
 
 def load_commands():
     commands = {}
