@@ -1,6 +1,6 @@
 import os
 import json
-from pyrogram import Client, filters
+from pyrogram import Client, filters, idle
 from pyrogram.types import Message
 
 # Отключаем логирование
@@ -37,8 +37,8 @@ def load_commands():
                 module = __import__(f"plugin.{filename[:-3]}", fromlist=["*"])
                 if hasattr(module, "command") and hasattr(module, "handler"):
                     commands[module.command] = module.handler
-            except:
-                pass
+            except Exception as e:
+                print(f"⚠️ Ошибка загрузки модуля {filename}: {e}")
     return commands
 
 commands = load_commands()
@@ -63,8 +63,7 @@ async def handle_commands(client: Client, message: Message):
         except Exception as e:
             await message.reply(f"╔⋞⚙️ ERROR ⚙️⋟\n║\n╠⫸ ❗ {e}\n║\n╚⫸⋞🌌 Cosmo 🌌⋟")
 
-@app.on_ready()
-async def startup_message(client: Client):
+async def send_startup_message():
     welcome_msg = """✅ CUB запущен на вашей странице.
 ---------------------------------------
 💕 Благодарим за доверие, и использование нашего проекта.
@@ -83,7 +82,12 @@ Mavan Shewyakov
 💙 С любовью Cosmo Project"""
     
     print(welcome_msg)
-    await client.send_message("me", welcome_msg)
+    await app.send_message("me", welcome_msg)
+
+async def main():
+    await app.start()
+    await send_startup_message()
+    await idle()
 
 if __name__ == "__main__":
-    app.run()
+    app.run(main())
